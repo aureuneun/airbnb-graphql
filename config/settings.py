@@ -46,7 +46,7 @@ PROJECT_APPS = [
     "rooms.apps.RoomsConfig",
 ]
 
-THIRD_PARTY_APPS = ["django_seed", "graphene_django"]
+THIRD_PARTY_APPS = ["django_seed", "graphene_django", "jwt"]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
@@ -132,3 +132,10 @@ MEDIA_URL = "/media/"
 # Auth
 
 AUTH_USER_MODEL = "users.User"
+
+
+# GraphQL
+
+GRAPHENE = {
+    "MIDDLEWARE": ["config.middlewares.JWTMiddleware"],
+}

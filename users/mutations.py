@@ -1,4 +1,7 @@
 import graphene
+import jwt
+from django.conf import settings
+from django.contrib.auth import authenticate
 from .models import User
 
 
@@ -14,7 +17,7 @@ class CreateAccountMutation(graphene.Mutation):
 
     def mutate(self, info, email, password, first_name=None, last_name=None):
         try:
-            User.objects.get(username=email)
+            User.objects.get(email=email)
             return CreateAccountMutation(ok=False, error="User already exists")
         except User.DoesNotExist:
             try:
@@ -22,3 +25,26 @@ class CreateAccountMutation(graphene.Mutation):
                 return CreateAccountMutation(ok=True)
             except Exception:
                 return CreateAccountMutation(error="Can't create account")
+
+
+class LoginMutation(graphene.Mutation):
+    class Arguments:
+        email = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    pk = graphene.Int()
+    error = graphene.String()
+    token = graphene.String()
+
+    def mutate(self, info, email, password):
+        try:
+            user = authenticate(username=email, password=password)
+            if user:
+                encoded_jwt = jwt.encode(
+                    {"pk": user.pk}, settings.SECRET_KEY, algorithm="HS256"
+                )
+                return LoginMutation(token=encoded_jwt, pk=user.pk)
+            else:
+                return LoginMutation(error="Wrong username/password")
+        except Exception:
+            pass
