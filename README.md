@@ -7,11 +7,12 @@ GraphQL API of the Airbnb Clone using Graphene GraphQL
 #### Rooms
 
 - [x] List Rooms (with Pagination)
-- [ ] See Room
+- [x] See Room
 - [ ] Add Room to Favourites
 
 #### Users
 
+- [x] See User
 - [ ] Login (JWT)
 - [ ] Create Account
 - [ ] See Favs
